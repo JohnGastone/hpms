@@ -15,9 +15,12 @@ export default function PatientsPage() {
       <header className="bg-white border-b border-slate-100 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xs font-bold">M</span>
-            </div>
+            <svg width="32" height="32" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="80" height="80" rx="20" fill="#2563eb"/>
+              <rect x="33" y="16" width="14" height="48" rx="7" fill="white" opacity="0.25"/>
+              <rect x="16" y="33" width="48" height="14" rx="7" fill="white" opacity="0.25"/>
+              <polyline points="14,42 26,42 31,28 40,56 49,34 54,42 66,42" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             <div>
               <h1 className="text-sm font-bold text-slate-800">MediTrack</h1>
               <p className="text-xs text-slate-400">Patient Management</p>
