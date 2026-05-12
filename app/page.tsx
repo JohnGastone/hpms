@@ -38,12 +38,12 @@ export default function PatientsPage() {
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Patients</h2>
           <p className="text-slate-500 text-sm mt-1">
-            {new Date().toLocaleDateString("en-GB", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
+            {(() => {
+              const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+              const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+              const d = new Date();
+              return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+            })()}
           </p>
         </div>
 
