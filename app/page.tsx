@@ -26,6 +26,9 @@ export default function PatientsPage() {
               <p className="text-xs text-slate-400">Patient Management</p>
             </div>
           </div>
+          <div className="flex items-center gap-6">
+             <h2 className="text-sm font-medium text-slate-700">Crafted with ❤️ by John Gastone</h2>
+          </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-slate-500">
               Ward: <span className="font-medium text-slate-700">All</span>
