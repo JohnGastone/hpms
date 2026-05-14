@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { Patient } from "./types";
 import { mockPatients } from "./mockData";
 
@@ -55,4 +56,53 @@ export async function fetchAppointments() {
     { id: "A007", patientId: "P009", patientName: "Neema Juma",     doctor: "Dr. Abubakar", date: "2025-05-15", time: "09:30", type: "Follow-up",     status: "scheduled" },
     { id: "A008", patientId: "P008", patientName: "Peter Otieno",   doctor: "Dr. Njeri",    date: "2025-05-15", time: "11:00", type: "Emergency",     status: "scheduled" },
   ];
+}
+
+// ─── React Query hooks ────────────────────────────────────────────────────────
+//
+// Flutter parallel:
+// useQuery replaces FutureBuilder + useEffect + useState loading/error all at once.
+// It handles caching, background refetching, loading, error, and stale states
+// automatically — the same problem Riverpod's FutureProvider solves.
+//
+// Flutter Riverpod:
+//   final patientsProvider = FutureProvider<List<Patient>>((ref) => fetchPatients());
+//   final AsyncValue<List<Patient>> patients = ref.watch(patientsProvider);
+//
+// React Query:
+//   const { data, isLoading, error } = usePatients();
+//
+// The query key (e.g. ["patients"]) is like the provider's identity —
+// it's how react-query knows which cached result to return.
+
+export function usePatients() {
+  return useQuery({
+    queryKey: ["patients"],
+    queryFn: fetchPatients,
+  });
+}
+
+export function usePatientById(id: string) {
+  return useQuery({
+    queryKey: ["patient", id],
+    queryFn: () => fetchPatientById(id),
+    enabled: !!id, // don't run if id is empty — Flutter: ref.watch only when valid
+  });
+}
+
+export function useDashboardStats() {
+  return useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: fetchDashboardStats,
+  });
+}
+
+export function useAppointments(dateFilter: string) {
+  return useQuery({
+    queryKey: ["appointments", dateFilter],  // key includes filter — refetches when it changes
+    queryFn: async () => {
+      const all = await fetchAppointments();
+      return dateFilter === "all" ? all : all.filter((a) => a.date === dateFilter);
+    },
+  });
 }

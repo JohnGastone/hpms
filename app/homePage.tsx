@@ -1,83 +1,66 @@
 "use client";
 
 // Flutter parallel:
-// "use client" = StatefulWidget. This page has state + side effects.
-// useEffect here replaces initState() — it fetches data when the page mounts.
-// The loading/error/data pattern is identical to FutureBuilder in Flutter:
-//   snapshot.connectionState == waiting  → show skeleton
-//   snapshot.hasError                    → show error widget
-//   snapshot.hasData                     → show content
+// useDashboardStats() = FutureProvider<DashboardStats> — react-query handles
+// loading, error, caching, and background refetch automatically.
+// usePatientStore() reads from Zustand — same as ref.watch(patientProvider).
+// useAuth() reads the logged-in user from Context — no BuildContext threading.
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
-import { fetchDashboardStats, fetchPatients } from "@/lib/api";
-import { Patient } from "@/lib/types";
+import { useDashboardStats, usePatients } from "@/lib/api";
+import { usePatientStore } from "@/store/usePatientStore";
+import { useAuth } from "@/context/authContext";
 import PatientCard from "@/components/patientCard";
 import { DashboardStatSkeleton, PatientCardSkeleton } from "@/components/skeletons";
 
-interface DashboardStats {
-  totalPatients: number;
-  admitted: number;
-  critical: number;
-  observation: number;
-  discharged: number;
-  bedsOccupied: number;
-  totalBeds: number;
-}
-
 export default function DashboardPage() {
-  // Three separate state variables — each piece of data has its own loading state
-  // Flutter: late DashboardStats stats; bool isLoading = true; String? error;
-  const [stats, setStats]           = useState<DashboardStats | null>(null);
-  const [statsLoading, setStatsLoading] = useState(true);
-  const [statsError, setStatsError] = useState<string | null>(null);
+  const { user } = useAuth();
 
-  const [criticalPatients, setCriticalPatients] = useState<Patient[]>([]);
-  const [patientsLoading, setPatientsLoading]   = useState(true);
+  // react-query — replaces useEffect + useState loading/error/data
+  // Flutter: ref.watch(dashboardStatsProvider)
+  const { data: stats, isLoading: statsLoading, error: statsError } = useDashboardStats();
+  const { data: fetchedPatients, isLoading: patientsLoading } = usePatients();
 
-  // useEffect with [] = initState() — runs once when the component mounts
-  // Flutter: void initState() { super.initState(); fetchStats(); }
+  // Zustand store — global patient list shared across all pages
+  const { patients, setPatients } = usePatientStore();
+
+  // Seed the Zustand store once when react-query finishes fetching
+  // From now on, all pages read from the store — not from the API directly
   useEffect(() => {
-    fetchDashboardStats()
-      .then((data) => setStats(data))
-      .catch(() => setStatsError("Failed to load stats"))
-      .finally(() => setStatsLoading(false));
+    if (fetchedPatients) setPatients(fetchedPatients);
+  }, [fetchedPatients, setPatients]);
 
-    fetchPatients()
-      .then((data) => setCriticalPatients(data.filter((p) => p.status === "critical")))
-      .finally(() => setPatientsLoading(false));
-
-    // Returning a cleanup function = dispose() in Flutter
-    // Here we don't have a subscription to cancel, but the pattern is the same:
-    // return () => { subscription.cancel(); }
-  }, []); // empty array = run once on mount only
+  // Derive critical patients from the STORE (not the API response directly)
+  // This means if you discharge a patient on the detail page,
+  // the dashboard updates instantly without a refetch
+  const criticalPatients = patients.filter((p) => p.status === "critical");
 
   const statCards = stats
     ? [
-        { label: "Total patients",  value: stats.totalPatients, color: "text-slate-700",  bg: "bg-white"       },
-        { label: "Admitted",        value: stats.admitted,      color: "text-blue-700",   bg: "bg-blue-50"     },
-        { label: "Critical",        value: stats.critical,      color: "text-red-700",    bg: "bg-red-50"      },
-        { label: "Under observation",value: stats.observation,  color: "text-amber-700",  bg: "bg-amber-50"    },
-        { label: "Beds occupied",   value: `${stats.bedsOccupied}/${stats.totalBeds}`, color: "text-teal-700", bg: "bg-teal-50" },
+        { label: "Total patients",    value: stats.totalPatients, color: "text-slate-700", bg: "bg-white"    },
+        { label: "Admitted",          value: stats.admitted,      color: "text-blue-700",  bg: "bg-blue-50"  },
+        { label: "Critical",          value: stats.critical,      color: "text-red-700",   bg: "bg-red-50"   },
+        { label: "Under observation", value: stats.observation,   color: "text-amber-700", bg: "bg-amber-50" },
+        { label: "Beds occupied",     value: `${stats.bedsOccupied}/${stats.totalBeds}`, color: "text-teal-700", bg: "bg-teal-50" },
       ]
     : [];
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-8 space-y-10">
-      {/* Page heading */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Dashboard</h2>
+        <h2 className="text-2xl font-bold text-slate-800">
+          Good morning, {user.name}
+        </h2>
         <p className="text-slate-500 text-sm mt-1" suppressHydrationWarning>
           {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
         </p>
       </div>
 
-      {/* Stats grid */}
       <section>
         <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Today&apos;s overview</h3>
-
         {statsError ? (
-          <div className="bg-red-50 text-red-700 rounded-2xl p-4 text-sm">{statsError}</div>
+          <div className="bg-red-50 text-red-700 rounded-2xl p-4 text-sm">Failed to load stats.</div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {statsLoading
@@ -92,17 +75,11 @@ export default function DashboardPage() {
         )}
       </section>
 
-      {/* Critical patients */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">
-            Critical patients
-          </h3>
-          <Link href="/patients" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-            View all →
-          </Link>
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Critical patients</h3>
+          <Link href="/patients" className="text-sm text-blue-600 hover:text-blue-700 font-medium">View all →</Link>
         </div>
-
         {patientsLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 2 }).map((_, i) => <PatientCardSkeleton key={i} />)}
@@ -123,20 +100,15 @@ export default function DashboardPage() {
         )}
       </section>
 
-      {/* Quick links */}
       <section>
         <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Quick actions</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { href: "/patients",     emoji: "🧑‍⚕️", label: "All patients",    desc: "View and search all patients"    },
-            { href: "/appointments", emoji: "📅",    label: "Appointments",    desc: "Manage today's schedule"         },
-            { href: "/wards",        emoji: "🏥",    label: "Ward overview",   desc: "Check bed availability by ward"  },
+            { href: "/patients/new", emoji: "➕", label: "Register patient", desc: "Add a new patient to the system" },
+            { href: "/appointments",  emoji: "📅", label: "Appointments",     desc: "Manage today's schedule"         },
+            { href: "/wards",         emoji: "🏥", label: "Ward overview",    desc: "Check bed availability by ward"  },
           ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all no-underline"
-            >
+            <Link key={item.href} href={item.href} className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all no-underline">
               <p className="text-2xl mb-3">{item.emoji}</p>
               <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
               <p className="text-xs text-slate-400 mt-1">{item.desc}</p>

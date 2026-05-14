@@ -1,5 +1,4 @@
 import Link from "next/link";
-import MediTrackIcon from "@/app/icon.svg";
 
 // Flutter parallel:
 // This is like a shared AppBar widget you'd pass into every Scaffold.
@@ -21,7 +20,12 @@ export default function Navbar() {
 
         {/* Logo + wordmark */}
         <Link href="/" className="flex items-center gap-2.5 no-underline">
-          <MediTrackIcon size={32} />
+          <svg width="32" height="32" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="80" height="80" rx="20" fill="#2563eb"/>
+            <rect x="33" y="16" width="14" height="48" rx="7" fill="white" opacity="0.25"/>
+            <rect x="16" y="33" width="48" height="14" rx="7" fill="white" opacity="0.25"/>
+            <polyline points="14,42 26,42 31,28 40,56 49,34 54,42 66,42" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
           <div>
             <p className="text-sm font-bold text-slate-800 leading-tight">MediTrack</p>
             <p className="text-xs text-slate-400 leading-tight">Patient Management</p>
