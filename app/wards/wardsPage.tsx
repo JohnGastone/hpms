@@ -44,7 +44,7 @@ export default function WardsPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Ward overview</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Ward overview</h1>
           <p className="text-slate-500 text-sm mt-0.5">
             {loading ? "Loading…" : `${totalOccupied} of ${totalBeds} beds occupied across 6 wards`}
           </p>
@@ -54,7 +54,7 @@ export default function WardsPage() {
       {/* Ward grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {wardStats.map((w) => (
-          <div key={w.ward} className="bg-white rounded-2xl ring-1 ring-slate-100 shadow-xs overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:ring-slate-200">
+          <div key={w.ward} className="bg-white dark:bg-slate-800 rounded-2xl ring-1 ring-slate-100 dark:ring-slate-700 shadow-xs overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:ring-slate-200 dark:hover:ring-slate-600">
 
             {/* Accent bar */}
             <div className={`h-1 w-full ${w.accent}`} />
@@ -68,7 +68,7 @@ export default function WardsPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
                   </div>
-                  <p className="text-sm font-bold text-slate-800">{w.label}</p>
+                  <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{w.label}</p>
                 </div>
                 {w.critical > 0 && (
                   <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-700 bg-red-50 px-2 py-0.5 rounded-full ring-1 ring-red-200/60">
@@ -84,7 +84,7 @@ export default function WardsPage() {
                   <span className="font-medium">{loading ? "—" : `${w.occupied} occupied`}</span>
                   <span>{w.totalBeds} beds total</span>
                 </div>
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                   {loading ? (
                     <div className="h-full w-1/3 bg-slate-200 animate-pulse rounded-full" />
                   ) : (
@@ -104,12 +104,12 @@ export default function WardsPage() {
 
               {/* Patient preview */}
               {!loading && w.patients.length > 0 && (
-                <div className="space-y-1 pt-1 border-t border-slate-50">
+                <div className="space-y-1 pt-1 border-t border-slate-50 dark:border-slate-700">
                   {w.patients.slice(0, 3).map((p) => (
                     <Link
                       key={p.id}
                       href={`/patients/${p.id}`}
-                      className="flex items-center justify-between text-xs py-1.5 text-slate-600 hover:text-blue-600 transition-colors no-underline group"
+                      className="flex items-center justify-between text-xs py-1.5 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors no-underline group"
                     >
                       <span className="font-medium group-hover:text-blue-600">{p.name}</span>
                       <span className="text-slate-400">Bed {p.bedNumber}</span>
@@ -122,7 +122,7 @@ export default function WardsPage() {
               )}
 
               {!loading && w.patients.length === 0 && (
-                <p className="text-xs text-slate-400 text-center py-2 border-t border-slate-50">No patients admitted</p>
+                <p className="text-xs text-slate-400 text-center py-2 border-t border-slate-50 dark:border-slate-700">No patients admitted</p>
               )}
             </div>
           </div>

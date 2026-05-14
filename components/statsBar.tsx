@@ -18,7 +18,7 @@ export default function StatsBar({ patients }: StatsBarProps) {
   return (
     <div className="grid grid-cols-5 gap-3">
       {statDefs.map(({ status, label, color, bg }) => (
-        <div key={label} className={`${bg} rounded-2xl p-4 text-center ring-1 ring-black/5`}>
+        <div key={label} className={`${bg} dark:bg-slate-800 rounded-2xl p-4 text-center ring-1 ring-black/5 dark:ring-slate-700`}>
           <p className={`text-2xl font-bold tracking-tight ${color}`}>
             {status ? count(status) : patients.length}
           </p>

@@ -25,7 +25,7 @@ export default function PatientsPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Patients</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Patients</h1>
           <p className="text-slate-500 text-sm mt-0.5">
             {loading ? "Loading…" : `${patients.length} patients on record`}
           </p>

@@ -68,14 +68,14 @@ export default function RegisterPatientPage() {
           </svg>
           Back
         </button>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Register patient</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Register patient</h1>
         <p className="text-slate-500 text-sm mt-0.5">
           Admitting as <span className="font-medium text-slate-700">{user.name}</span> · {user.ward}
         </p>
       </div>
 
       {/* Form card */}
-      <div className="bg-white rounded-3xl ring-1 ring-slate-100 shadow-xs p-7">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl ring-1 ring-slate-100 dark:ring-slate-700 shadow-xs p-7">
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-6">Patient information</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -147,7 +147,7 @@ export default function RegisterPatientPage() {
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-sm font-semibold text-slate-700">{label}</label>
+      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">{label}</label>
       {children}
       {error && (
         <p className="text-xs text-red-500 flex items-center gap-1">
@@ -163,10 +163,10 @@ function Field({ label, error, children }: { label: string; error?: string; chil
 
 function input(hasError: boolean) {
   return [
-    "w-full px-4 py-2.5 bg-white border rounded-xl text-sm text-slate-800 placeholder-slate-400",
+    "w-full px-4 py-2.5 bg-white dark:bg-slate-700 border rounded-xl text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500",
     "focus:outline-none focus:ring-2 focus:border-transparent transition-all",
     hasError
       ? "border-red-300 focus:ring-red-100"
-      : "border-slate-200 focus:ring-blue-100 hover:border-slate-300",
+      : "border-slate-200 dark:border-slate-600 focus:ring-blue-100 dark:focus:ring-blue-900/40 hover:border-slate-300 dark:hover:border-slate-500",
   ].join(" ");
 }

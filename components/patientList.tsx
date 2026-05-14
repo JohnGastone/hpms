@@ -20,7 +20,7 @@ const activeStatusClasses: Record<PatientStatus, string> = {
   discharged:  "bg-slate-700 text-white border-slate-700",
 };
 
-const inactiveChip = "bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-700";
+const inactiveChip = "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 hover:text-slate-700 dark:hover:text-slate-200";
 const activeAll    = "bg-slate-900 text-white border-slate-900";
 
 export default function PatientList({ patients, onPatientClick }: PatientListProps) {
@@ -65,7 +65,7 @@ export default function PatientList({ patients, onPatientClick }: PatientListPro
           placeholder="Search by name, ID, or doctor…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all shadow-xs"
+          className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 focus:border-blue-300 dark:focus:border-blue-600 transition-all shadow-xs"
         />
         {query && (
           <button
@@ -112,7 +112,7 @@ export default function PatientList({ patients, onPatientClick }: PatientListPro
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
             </svg>
           </div>
-          <p className="text-sm font-semibold text-slate-700">No matching patients</p>
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">No matching patients</p>
           <p className="text-xs text-slate-400 mt-1">Try a different name or clear the filters</p>
         </div>
       ) : (

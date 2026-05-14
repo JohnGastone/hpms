@@ -85,7 +85,7 @@ export default function PatientDetailPage({ params }: PageProps) {
       </button>
 
       {/* Patient card */}
-      <div className="bg-white rounded-3xl ring-1 ring-slate-100 shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl ring-1 ring-slate-100 dark:ring-slate-700 shadow-xs overflow-hidden">
 
         {/* Coloured header band */}
         <div className={`h-1.5 w-full ${
@@ -102,7 +102,7 @@ export default function PatientDetailPage({ params }: PageProps) {
                 <span className="text-xl font-bold text-white">{getInitials(livePatient.name)}</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-900 tracking-tight">{livePatient.name}</h1>
+                <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">{livePatient.name}</h1>
                 <p className="text-sm text-slate-400 mt-0.5">{livePatient.id}</p>
               </div>
             </div>
@@ -110,20 +110,20 @@ export default function PatientDetailPage({ params }: PageProps) {
           </div>
 
           {/* Condition */}
-          <div className="bg-slate-50 rounded-2xl p-4 mb-6">
+          <div className="bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-4 mb-6">
             <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Condition</p>
-            <p className="text-slate-700 font-medium text-sm leading-relaxed">{livePatient.condition}</p>
+            <p className="text-slate-700 dark:text-slate-200 font-medium text-sm leading-relaxed">{livePatient.condition}</p>
           </div>
 
           {/* Info rows */}
-          <div className="divide-y divide-slate-50">
+          <div className="divide-y divide-slate-50 dark:divide-slate-700/50">
             {infoRows.map(({ label, value, icon }) => (
               <div key={label} className="flex items-center justify-between py-2.5">
                 <span className="flex items-center gap-2 text-sm text-slate-400">
-                  <span className="text-slate-300">{icon}</span>
+                  <span className="text-slate-300 dark:text-slate-600">{icon}</span>
                   {label}
                 </span>
-                <span className="text-sm font-semibold text-slate-700 capitalize">{value}</span>
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 capitalize">{value}</span>
               </div>
             ))}
           </div>
@@ -135,7 +135,7 @@ export default function PatientDetailPage({ params }: PageProps) {
         <button
           type="button"
           onClick={() => router.push("/patients")}
-          className="bg-white border border-slate-200 text-slate-700 text-sm font-semibold py-3 rounded-2xl hover:bg-slate-50 active:scale-[0.97] transition-all"
+          className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold py-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 active:scale-[0.97] transition-all"
         >
           All patients
         </button>

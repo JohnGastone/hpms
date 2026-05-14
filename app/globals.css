@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode: add .dark to <html> to activate */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #FFFFFF;
   --foreground: #0F172A;
+}
+
+.dark {
+  --background: #0F172A;
+  --foreground: #F1F5F9;
 }
 
 @theme inline {
@@ -24,6 +32,8 @@ body {
 ::-webkit-scrollbar-track   { background: transparent; }
 ::-webkit-scrollbar-thumb   { background: #CBD5E1; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+.dark ::-webkit-scrollbar-thumb       { background: #334155; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
 /* ── Keyframes ──────────────────────────────────────────────── */
 @keyframes fade-up {

@@ -88,7 +88,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Good morning, {user.name.replace("Dr. ", "Dr ")}
           </h1>
           <p className="text-slate-500 text-sm mt-0.5" suppressHydrationWarning>
@@ -116,10 +116,10 @@ export default function DashboardPage() {
             {statsLoading
               ? Array.from({ length: 5 }).map((_, i) => <DashboardStatSkeleton key={i} />)
               : statCards.map((card, i) => (
-                  <div key={card.label} className={`bg-white rounded-2xl p-4 ring-1 ring-slate-100 shadow-xs animate-fade-up anim-delay-${i} hover:shadow-md hover:ring-slate-200 transition-all`}>
+                  <div key={card.label} className={`bg-white dark:bg-slate-800 rounded-2xl p-4 ring-1 ring-slate-100 dark:ring-slate-700 shadow-xs animate-fade-up anim-delay-${i} hover:shadow-md hover:ring-slate-200 dark:hover:ring-slate-600 transition-all`}>
                     <div className={`inline-flex p-2 rounded-lg ${card.iconBg} mb-3`}>{card.icon}</div>
                     <p className={`text-2xl font-bold tracking-tight ${card.valueColor}`}>{card.value}</p>
-                    <p className="text-xs text-slate-400 font-medium mt-0.5 leading-tight">{card.label}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 font-medium mt-0.5 leading-tight">{card.label}</p>
                   </div>
                 ))}
           </div>
@@ -147,11 +147,11 @@ export default function DashboardPage() {
             {Array.from({ length: 2 }).map((_, i) => <PatientCardSkeleton key={i} />)}
           </div>
         ) : criticalPatients.length === 0 ? (
-          <div className="bg-white rounded-2xl ring-1 ring-slate-100 shadow-xs p-8 text-center">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl ring-1 ring-slate-100 dark:ring-slate-700 shadow-xs p-8 text-center">
             <div className="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
               <svg className="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
             </div>
-            <p className="text-sm font-semibold text-slate-700">No critical patients</p>
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">No critical patients</p>
             <p className="text-xs text-slate-400 mt-1">All patients are stable right now</p>
           </div>
         ) : (
@@ -173,12 +173,12 @@ export default function DashboardPage() {
             <Link
               key={item.href}
               href={item.href}
-              className="group bg-white rounded-2xl ring-1 ring-slate-100 shadow-xs p-5 hover:ring-slate-200 hover:shadow-md transition-all no-underline"
+              className="group bg-white dark:bg-slate-800 rounded-2xl ring-1 ring-slate-100 dark:ring-slate-700 shadow-xs p-5 hover:ring-slate-200 dark:hover:ring-slate-600 hover:shadow-md transition-all no-underline"
             >
               <div className={`inline-flex p-2.5 rounded-xl ${item.iconBg} mb-3 group-hover:scale-110 transition-transform duration-200`}>
                 {item.icon}
               </div>
-              <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
+              <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{item.label}</p>
               <p className="text-xs text-slate-400 mt-0.5">{item.desc}</p>
             </Link>
           ))}

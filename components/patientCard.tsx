@@ -45,8 +45,8 @@ export default function PatientCard({ patient, onClick }: PatientCardProps) {
   return (
     <div
       onClick={() => onClick?.(patient)}
-      className={`bg-white rounded-2xl ring-1 ring-slate-100 border-l-4 ${statusAccent[patient.status] ?? "border-l-slate-200"}
-        p-5 transition-all duration-200 hover:shadow-md hover:ring-slate-200 hover:-translate-y-1 active:scale-[0.98] active:shadow-none
+      className={`bg-white dark:bg-slate-800 rounded-2xl ring-1 ring-slate-100 dark:ring-slate-700 border-l-4 ${statusAccent[patient.status] ?? "border-l-slate-200"}
+        p-5 transition-all duration-200 hover:shadow-md hover:ring-slate-200 dark:hover:ring-slate-600 hover:-translate-y-1 active:scale-[0.98] active:shadow-none
         ${onClick ? "cursor-pointer" : ""}`}
     >
       <div className="flex items-start justify-between mb-3">
@@ -55,14 +55,14 @@ export default function PatientCard({ patient, onClick }: PatientCardProps) {
             <span className="text-xs font-bold text-white">{getInitials(patient.name)}</span>
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-slate-900 text-sm leading-tight truncate">{patient.name}</p>
+            <p className="font-semibold text-slate-900 dark:text-white text-sm leading-tight truncate">{patient.name}</p>
             <p className="text-[11px] text-slate-400 mt-0.5">{patient.age}y · {patient.gender} · {patient.id}</p>
           </div>
         </div>
         <StatusBadge status={patient.status} />
       </div>
 
-      <p className="text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2 leading-relaxed mb-3 line-clamp-2">
+      <p className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-2 leading-relaxed mb-3 line-clamp-2">
         {patient.condition}
       </p>
 
@@ -72,7 +72,7 @@ export default function PatientCard({ patient, onClick }: PatientCardProps) {
         </span>
         <div className="text-right">
           <p className="text-[11px] text-slate-400 leading-tight">{patient.doctor}</p>
-          <p className="text-[11px] font-semibold text-slate-600 leading-tight">Bed {patient.bedNumber}</p>
+          <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 leading-tight">Bed {patient.bedNumber}</p>
         </div>
       </div>
     </div>
