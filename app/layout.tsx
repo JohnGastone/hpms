@@ -26,7 +26,7 @@ export default function RootLayout({
       lang="en"
       className={`${montserrat.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-slate-50 flex flex-col">
+      <body className="min-h-full bg-white flex flex-col">
         <ReactQueryProvider>
           <AuthProvider>
             <Navbar />

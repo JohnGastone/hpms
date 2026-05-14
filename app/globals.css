@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFFFFF;
+  --foreground: #0F172A;
 }
 
 @theme inline {
@@ -11,18 +11,50 @@
   --font-sans: var(--font-montserrat);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar         { width: 5px; height: 5px; }
+::-webkit-scrollbar-track   { background: transparent; }
+::-webkit-scrollbar-thumb   { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* ── Keyframes ──────────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+@keyframes pop {
+  0%   { transform: scale(0.85); opacity: 0; }
+  65%  { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ── Animation utilities ────────────────────────────────────── */
+.animate-fade-up  { animation: fade-up  0.35s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-scale-in { animation: scale-in 0.25s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-pop      { animation: pop      0.3s  cubic-bezier(0.16,1,0.3,1) both; }
+
+/* Stagger delays — used on grid children */
+.anim-delay-0 { animation-delay:  0ms; }
+.anim-delay-1 { animation-delay: 60ms; }
+.anim-delay-2 { animation-delay:120ms; }
+.anim-delay-3 { animation-delay:180ms; }
+.anim-delay-4 { animation-delay:240ms; }
+
+/* ── Ward occupancy bar ─────────────────────────────────────── */
 .ward-bar {
   width: var(--ward-occupancy, 0%);
 }

@@ -1,11 +1,5 @@
 "use client";
 
-// Flutter parallel:
-// The key lesson here is useEffect with a dependency — [dateFilter].
-// When the user changes the date filter, the effect re-runs and refetches.
-// In Flutter this is like calling setState() which triggers didUpdateWidget(),
-// which then calls fetchAppointments() again.
-
 import { useState, useEffect } from "react";
 import { fetchAppointments } from "@/lib/api";
 
@@ -20,120 +14,133 @@ interface Appointment {
   status: string;
 }
 
-const STATUS_STYLES: Record<string, string> = {
-  scheduled:    "bg-blue-50 text-blue-700",
-  "in-progress": "bg-amber-50 text-amber-700",
-  completed:    "bg-green-50 text-green-700",
-  cancelled:    "bg-slate-100 text-slate-500",
+const STATUS_CONFIG: Record<string, { label: string; dot: string; classes: string }> = {
+  scheduled:    { label: "Scheduled",    dot: "bg-blue-500",   classes: "bg-blue-50 text-blue-700 ring-1 ring-blue-200/60"   },
+  "in-progress":{ label: "In progress",  dot: "bg-amber-500",  classes: "bg-amber-50 text-amber-700 ring-1 ring-amber-200/60" },
+  completed:    { label: "Completed",    dot: "bg-emerald-500",classes: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/60" },
+  cancelled:    { label: "Cancelled",    dot: "bg-slate-300",  classes: "bg-slate-50 text-slate-500 ring-1 ring-slate-200/60" },
 };
 
-// Available filter dates — in a real app this would come from the API
-const DATE_OPTIONS = [
-  { label: "Today",     value: "2025-05-13" },
-  { label: "Tomorrow",  value: "2025-05-14" },
-  { label: "May 15",    value: "2025-05-15" },
-  { label: "All",       value: "all"        },
+const TYPE_ACCENT: Record<string, string> = {
+  "Emergency":    "border-l-red-400",
+  "Follow-up":    "border-l-blue-400",
+  "Consultation": "border-l-violet-400",
+  "Check-up":     "border-l-teal-400",
+  "Post-op":      "border-l-amber-400",
+};
+
+const DATE_TABS = [
+  { label: "Today",    value: "2025-05-13" },
+  { label: "Tomorrow", value: "2025-05-14" },
+  { label: "May 15",   value: "2025-05-15" },
+  { label: "All",      value: "all"        },
 ];
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [fetchedFor, setFetchedFor]     = useState<string | null>(null);
-  const [dateFilter, setDateFilter]     = useState("2025-05-13"); // today
+  const [dateFilter, setDateFilter]     = useState("2025-05-13");
 
-  // loading is derived — true whenever the fetched data doesn't match the
-  // current filter, so no synchronous setState is needed inside the effect.
   const loading = fetchedFor !== dateFilter;
 
-  // useEffect with [dateFilter] dependency:
-  // Re-runs every time dateFilter changes — like didUpdateWidget() in Flutter.
-  // Flutter equivalent:
-  //   void didUpdateWidget(Widget old) {
-  //     if (old.dateFilter != widget.dateFilter) fetchAppointments();
-  //   }
   useEffect(() => {
     let cancelled = false;
-
-    fetchAppointments()
-      .then((data) => {
-        if (cancelled) return;
-        const filtered = dateFilter === "all"
-          ? data
-          : data.filter((a) => a.date === dateFilter);
-        setAppointments(filtered);
-        setFetchedFor(dateFilter);
-      });
-
+    fetchAppointments().then((data) => {
+      if (cancelled) return;
+      const filtered = dateFilter === "all" ? data : data.filter((a) => a.date === dateFilter);
+      setAppointments(filtered);
+      setFetchedFor(dateFilter);
+    });
     return () => { cancelled = true; };
-  }, [dateFilter]); // ← this is the key: re-run when dateFilter changes
+  }, [dateFilter]);
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+    <main className="max-w-4xl mx-auto px-6 py-8 space-y-6 animate-fade-up">
+
+      {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Appointments</h2>
-        <p className="text-slate-500 text-sm mt-1">
-          {loading ? "Loading..." : `${appointments.length} appointments`}
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Appointments</h1>
+        <p className="text-slate-500 text-sm mt-0.5">
+          {loading ? "Loading…" : `${appointments.length} appointment${appointments.length !== 1 ? "s" : ""}`}
         </p>
       </div>
 
-      {/* Date filter — changing this triggers a re-fetch via useEffect */}
-      <div className="flex gap-2 flex-wrap">
-        {DATE_OPTIONS.map((opt) => (
+      {/* Tab filter */}
+      <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl w-fit">
+        {DATE_TABS.map((tab) => (
           <button
-            key={opt.value}
-            onClick={() => setDateFilter(opt.value)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-              dateFilter === opt.value
-                ? "bg-blue-600 text-white"
-                : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+            key={tab.value}
+            type="button"
+            onClick={() => setDateFilter(tab.value)}
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all active:scale-[0.94] ${
+              dateFilter === tab.value
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-500 hover:text-slate-700"
             }`}
           >
-            {opt.label}
+            {tab.label}
           </button>
         ))}
       </div>
 
-      {/* Appointment list */}
-      <div className="space-y-3">
+      {/* List */}
+      <div className="space-y-2.5">
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl border border-slate-100 p-5 animate-pulse">
+            <div key={i} className="bg-white rounded-2xl ring-1 ring-slate-100 p-5 animate-pulse">
               <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <div className="h-4 w-36 bg-slate-200 rounded" />
-                  <div className="h-3 w-24 bg-slate-100 rounded" />
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-8 bg-slate-100 rounded" />
+                  <div className="space-y-2">
+                    <div className="h-3.5 w-36 bg-slate-100 rounded" />
+                    <div className="h-3 w-24 bg-slate-100 rounded" />
+                  </div>
                 </div>
                 <div className="h-6 w-20 bg-slate-100 rounded-full" />
               </div>
             </div>
           ))
         ) : appointments.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center">
-            <p className="text-3xl mb-3">📅</p>
-            <p className="text-slate-500 font-medium">No appointments for this date</p>
+          <div className="bg-white rounded-2xl ring-1 ring-slate-100 p-14 text-center">
+            <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="text-sm font-semibold text-slate-700">No appointments</p>
+            <p className="text-xs text-slate-400 mt-1">Nothing scheduled for this date</p>
           </div>
         ) : (
-          appointments.map((appt) => (
-            <div key={appt.id} className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-sm transition-shadow">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  {/* Time block */}
-                  <div className="text-center min-w-[52px]">
-                    <p className="text-lg font-bold text-slate-800">{appt.time}</p>
-                    <p className="text-xs text-slate-400">{appt.date.slice(5)}</p>
+          appointments.map((appt) => {
+            const statusCfg = STATUS_CONFIG[appt.status] ?? STATUS_CONFIG.scheduled;
+            return (
+              <div
+                key={appt.id}
+                className={`bg-white rounded-2xl ring-1 ring-slate-100 border-l-4 ${TYPE_ACCENT[appt.type] ?? "border-l-slate-200"} p-5 hover:shadow-sm transition-shadow`}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4 min-w-0">
+                    {/* Time */}
+                    <div className="text-center shrink-0 w-14">
+                      <p className="text-base font-bold text-slate-900 leading-tight">{appt.time}</p>
+                      <p className="text-[11px] text-slate-400 leading-tight">{appt.date.slice(5).replace("-", "/")}</p>
+                    </div>
+                    <div className="w-px h-8 bg-slate-100 shrink-0" />
+                    {/* Patient info */}
+                    <div className="min-w-0">
+                      <p className="font-semibold text-slate-900 text-sm truncate">{appt.patientName}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">{appt.doctor} · <span className="text-slate-500">{appt.type}</span></p>
+                    </div>
                   </div>
-                  <div className="w-px h-10 bg-slate-100" />
-                  {/* Patient + doctor info */}
-                  <div>
-                    <p className="font-semibold text-slate-800 text-sm">{appt.patientName}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{appt.doctor} · {appt.type}</p>
-                  </div>
+                  {/* Status badge */}
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold shrink-0 ${statusCfg.classes}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusCfg.dot} ${appt.status === "in-progress" ? "animate-pulse" : ""}`} />
+                    {statusCfg.label}
+                  </span>
                 </div>
-                <span className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize flex-shrink-0 ${STATUS_STYLES[appt.status] ?? "bg-slate-100 text-slate-500"}`}>
-                  {appt.status}
-                </span>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </main>
