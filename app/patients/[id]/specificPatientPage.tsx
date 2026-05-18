@@ -44,7 +44,7 @@ export default function PatientDetailPage({ params }: PageProps) {
   if (isLoading) return <PatientDetailSkeleton />;
 
   if (error || !livePatient) return (
-    <main className="max-w-2xl mx-auto px-6 py-20 text-center">
+    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-20 text-center">
       <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
         <svg className="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -70,7 +70,7 @@ export default function PatientDetailPage({ params }: PageProps) {
   ];
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-8 space-y-5 animate-fade-up">
+    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-5 animate-fade-up">
 
       {/* Back */}
       <button
@@ -94,9 +94,9 @@ export default function PatientDetailPage({ params }: PageProps) {
           livePatient.status === "observation" ? "bg-amber-400"  : "bg-slate-200"
         }`} />
 
-        <div className="p-7">
+        <div className="p-5 sm:p-7">
           {/* Identity row */}
-          <div className="flex items-start justify-between mb-6">
+          <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
             <div className="flex items-center gap-4">
               <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${getAvatarGradient(livePatient.name)} flex items-center justify-center shrink-0 shadow-sm`}>
                 <span className="text-xl font-bold text-white">{getInitials(livePatient.name)}</span>
@@ -166,7 +166,7 @@ export default function PatientDetailPage({ params }: PageProps) {
 function PatientDetailSkeleton() {
   const pulse = "animate-pulse bg-slate-100 rounded-lg";
   return (
-    <main className="max-w-2xl mx-auto px-6 py-8 space-y-5">
+    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-5">
       <div className={`h-4 w-14 ${pulse}`} />
       <div className="bg-white rounded-3xl ring-1 ring-slate-100 overflow-hidden">
         <div className="h-1.5 w-full bg-slate-100 animate-pulse" />

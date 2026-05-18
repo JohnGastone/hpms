@@ -55,7 +55,7 @@ export default function AppointmentsPage() {
   }, [dateFilter]);
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-8 space-y-6 animate-fade-up">
+    <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-fade-up">
 
       {/* Header */}
       <div>
@@ -66,7 +66,8 @@ export default function AppointmentsPage() {
       </div>
 
       {/* Tab filter */}
-      <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-fit">
+      <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 pb-0.5">
+      <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-fit min-w-max">
         {DATE_TABS.map((tab) => (
           <button
             key={tab.value}
@@ -81,6 +82,7 @@ export default function AppointmentsPage() {
             {tab.label}
           </button>
         ))}
+      </div>
       </div>
 
       {/* List */}

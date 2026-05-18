@@ -54,7 +54,7 @@ export default function RegisterPatientPage() {
   };
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-8 space-y-6 animate-fade-up">
+    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-fade-up">
 
       {/* Header */}
       <div>
@@ -75,7 +75,7 @@ export default function RegisterPatientPage() {
       </div>
 
       {/* Form card */}
-      <div className="bg-white dark:bg-slate-800 rounded-3xl ring-1 ring-slate-100 dark:ring-slate-700 shadow-xs p-7">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl ring-1 ring-slate-100 dark:ring-slate-700 shadow-xs p-5 sm:p-7">
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-6">Patient information</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -84,7 +84,7 @@ export default function RegisterPatientPage() {
             <input {...register("name")} placeholder="e.g. Amina Hassan" className={input(!!errors.name)} />
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Age" error={errors.age?.message}>
               <input type="number" {...register("age", { valueAsNumber: true })} placeholder="34" className={input(!!errors.age)} />
             </Field>
@@ -98,7 +98,7 @@ export default function RegisterPatientPage() {
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Ward" error={errors.ward?.message}>
               <select {...register("ward")} className={input(!!errors.ward)}>
                 <option value="">Select ward</option>

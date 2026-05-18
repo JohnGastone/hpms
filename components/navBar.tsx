@@ -65,76 +65,156 @@ function ThemeToggle() {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-b border-slate-200/70 dark:border-slate-700/70 sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between gap-4">
+    <>
+      <header className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-b border-slate-200/70 dark:border-slate-700/70 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
 
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0 group no-underline">
-          <svg width="30" height="30" viewBox="0 0 80 80" fill="none" className="shrink-0">
-            <rect width="80" height="80" rx="20" fill="#2563eb"/>
-            <rect x="33" y="16" width="14" height="48" rx="7" fill="white" opacity="0.3"/>
-            <rect x="16" y="33" width="48" height="14" rx="7" fill="white" opacity="0.3"/>
-            <polyline points="14,42 26,42 31,28 40,56 49,34 54,42 66,42"
-              fill="none" stroke="white" strokeWidth="3.5"
-              strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          <div>
-            <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 transition-colors">MediTrack</p>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 leading-tight font-semibold tracking-wider uppercase">HMS</p>
-          </div>
-        </Link>
-
-        {/* Nav links */}
-        <nav className="hidden md:flex items-center gap-0.5 flex-1 max-w-xs">
-          {navLinks.map((link) => {
-            const active = isActive(link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 no-underline ${
-                  active
-                    ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
-                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Right side: clock · toggle · user */}
-        <div className="flex items-center gap-3 shrink-0">
-
-          <LiveClock />
-
-          <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 hidden sm:block" />
-
-          <ThemeToggle />
-
-          <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 hidden sm:block" />
-
-          <div className="flex items-center gap-2.5">
-            <div className="text-right hidden sm:block">
-              <p className="text-xs font-semibold text-slate-800 dark:text-slate-100 leading-snug">Dr. Okello</p>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 leading-snug">Cardiology · On duty</p>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group no-underline">
+            <svg width="30" height="30" viewBox="0 0 80 80" fill="none" className="shrink-0">
+              <rect width="80" height="80" rx="20" fill="#2563eb"/>
+              <rect x="33" y="16" width="14" height="48" rx="7" fill="white" opacity="0.3"/>
+              <rect x="16" y="33" width="48" height="14" rx="7" fill="white" opacity="0.3"/>
+              <polyline points="14,42 26,42 31,28 40,56 49,34 54,42 66,42"
+                fill="none" stroke="white" strokeWidth="3.5"
+                strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <div>
+              <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 transition-colors">MediTrack</p>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 leading-tight font-semibold tracking-wider uppercase">HMS</p>
             </div>
-            <div className="relative">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
-                <span className="text-xs font-bold text-white tracking-wide">DO</span>
+          </Link>
+
+          {/* Desktop nav links */}
+          <nav className="hidden md:flex items-center gap-0.5 flex-1 max-w-xs">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 no-underline ${
+                    active
+                      ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Right side */}
+          <div className="flex items-center gap-3 shrink-0">
+            <LiveClock />
+
+            <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 hidden sm:block" />
+
+            <ThemeToggle />
+
+            <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 hidden sm:block" />
+
+            <div className="hidden sm:flex items-center gap-2.5">
+              <div className="text-right hidden sm:block">
+                <p className="text-xs font-semibold text-slate-800 dark:text-slate-100 leading-snug">Dr. Okello</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 leading-snug">Cardiology · On duty</p>
               </div>
-              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white dark:border-slate-900" />
+              <div className="relative">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
+                  <span className="text-xs font-bold text-white tracking-wide">DO</span>
+                </div>
+                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white dark:border-slate-900" />
+              </div>
             </div>
-          </div>
 
+            {/* Mobile: avatar only */}
+            <div className="relative sm:hidden">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
+                <span className="text-[11px] font-bold text-white tracking-wide">DO</span>
+              </div>
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-white dark:border-slate-900" />
+            </div>
+
+            {/* Hamburger — mobile only */}
+            <button
+              type="button"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen ? "true" : "false"}
+              onClick={() => setMobileOpen((o) => !o)}
+              className="md:hidden w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 transition-all active:scale-90"
+            >
+              {mobileOpen ? (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+
+        {/* Mobile nav drawer */}
+        {mobileOpen && (
+          <div className="md:hidden border-t border-slate-200/70 dark:border-slate-700/70 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm">
+            <nav className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all no-underline ${
+                      active
+                        ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
+                        : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    }`}
+                  >
+                    {link.label}
+                    {active && (
+                      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
+                    )}
+                  </Link>
+                );
+              })}
+              <div className="mt-2 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3 px-4 pb-1">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm shrink-0">
+                  <span className="text-[11px] font-bold text-white">DO</span>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-100 leading-snug">Dr. Okello</p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500">Cardiology · On duty</p>
+                </div>
+              </div>
+            </nav>
+          </div>
+        )}
+      </header>
+
+      {/* Backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/20 md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+    </>
   );
 }

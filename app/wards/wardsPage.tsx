@@ -39,7 +39,7 @@ export default function WardsPage() {
   const totalOccupied = wardStats.reduce((s, w) => s + (loading ? 0 : w.occupied), 0);
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-8 space-y-8 animate-fade-up">
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 animate-fade-up">
 
       {/* Header */}
       <div className="flex items-start justify-between gap-4">

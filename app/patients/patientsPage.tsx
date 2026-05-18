@@ -20,7 +20,7 @@ export default function PatientsPage() {
   }, []);
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-8 space-y-6 animate-fade-up">
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-fade-up">
 
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
@@ -37,7 +37,8 @@ export default function PatientsPage() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          Register patient
+          <span className="hidden sm:inline">Register patient</span>
+          <span className="sm:hidden">Register</span>
         </Link>
       </div>
 
